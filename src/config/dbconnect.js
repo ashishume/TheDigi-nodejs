@@ -9,10 +9,6 @@ const connectDB = () => {
       )
       .then((data) => {
         data.data.map((value) => {
-          //   if (value.id == 1) {
-          //     console.log('=====>', value);
-          //   }
-
           mongoose
             .connect(value.mongoURI, {
               useNewUrlParser: true,

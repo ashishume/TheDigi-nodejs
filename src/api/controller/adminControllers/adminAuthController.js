@@ -3,15 +3,17 @@ const router = express.Router();
 const User = require('../../../models/adminModel');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
+const secret = 'sabkaBaapHaIyeSoftware';
+
+const validateLogin = require('../../../validations/loginValidations');
+const validateRegister = require('../../../validations/registerValidations');
 
 exports.adminRegister = (req, res) => {
-  //   const { errors, isValid } = validationRegisterInput(req.body, 'signup');
+  const { errors, isValid } = validateRegister(req.body, 'signup');
 
-  const errors = {};
-
-  //   if (!isValid) {
-  //     return res.status(400).json(errors);
-  //   }
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
 
   User.findOne({ email: req.body.email })
     .then((user) => {
@@ -23,6 +25,7 @@ exports.adminRegister = (req, res) => {
           name: req.body.name,
           email: req.body.email,
           password: req.body.password,
+          type: req.body.type,
         });
 
         console.log(newUser);
@@ -62,4 +65,37 @@ exports.adminRegister = (req, res) => {
     });
 };
 
-exports.adminLogin = (req, res) => {};
+exports.adminLogin = (req, res) => {
+  const { errors, isValid } = validateLogin(req.body, 'login');
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  User.findOne({ email: req.body.email }).then((user) => {
+    if (!user) {
+      errors.email = 'Not found';
+
+      res.status(404).json(errors);
+    }
+
+    if (user.password === req.body.password) {
+      const payLoad = {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+      };
+
+      jwt.sign(payLoad, secret, { expiresIn: 3600 }, (err, token) => {
+        if (err) throw err;
+        res.json({
+          success: true,
+          token: `Bearer ${token}`,
+        });
+      });
+    } else {
+      errors.password = 'Incorrect password';
+      return res.status(404).json(errors);
+    }
+  });
+};
