@@ -32,4 +32,18 @@ const connectDB = () => {
   }
 };
 
+// const connectDB = async () => {
+//   try {
+//     await mongoose.connect(
+//       'mongodb+srv://deathkingume:deathking1997###@cluster0-brfpz.mongodb.net/school-db?retryWrites=true&w=majority',
+//       { useNewUrlParser: true }
+//     );
+
+//     console.log('Mongo Connected...');
+//   } catch (err) {
+//     console.error(err.message);
+//     process.exit(1);
+//   }
+// };
+
 module.exports = connectDB;

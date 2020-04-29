@@ -11,6 +11,7 @@ app.use(bodyParser.json());
 
 //routes
 const index = require('./api/routes/index');
+const adminRoutes = require('./api/routes/adminRoutes/adminAuthRoutes');
 // const profile = require('./api/routes/profile');
 // const user = require('./api/routes/user');
 
@@ -42,7 +43,7 @@ app.use((req, res, next) => {
 // require('./config/passport')(passport);
 
 app.use('/api', index);
-// app.use('/api/profile', profile);
+app.use('/api/admin', adminRoutes);
 // app.use('/api/user', user);
 
 module.exports = app;
