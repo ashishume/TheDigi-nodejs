@@ -49,15 +49,6 @@ exports.adminRegister = (req, res) => {
               error: e,
             });
           });
-
-        // bcryptjs.genSalt(10, (err, salt) => {
-        //   if (err) throw err;
-        //   bcryptjs.hash(newUser.password, salt, (err, hash) => {
-        //     if (err) throw err;
-        //     newUser.password = hash;
-
-        //   });
-        // });
       }
     })
     .catch((e) => {
@@ -97,5 +88,12 @@ exports.adminLogin = (req, res) => {
       errors.password = 'Incorrect password';
       return res.status(404).json(errors);
     }
+  });
+};
+
+exports.adminRestrict = (req, res) => {
+  res.json({
+    email: req.user.email,
+    name: req.user.name,
   });
 };

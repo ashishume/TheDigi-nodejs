@@ -40,9 +40,9 @@ app.use((req, res, next) => {
   next();
 });
 
-// require('./config/passport')(passport);
+require('./config/passport')(passport);
 
-app.use('/api', index);
+app.use('/', index);
 app.use('/api/admin', adminRoutes);
 // app.use('/api/user', user);
 
