@@ -70,16 +70,16 @@ exports.adminLogin = (req, res) => {
       res.status(404).json(errors);
     }
 
-    let typeNum = Math.floor(100000 + Math.random() * 900000);
+    const typeNum = Math.floor(100000 + Math.random() * 900000);
 
-    typeNum += 1000000 + user.userType;
+    let ans = typeNum.toString() + user.userType;
 
     if (user.password === req.body.password) {
       const payLoad = {
         id: user._id,
         email: user.email,
         name: user.name,
-        type: typeNum,
+        type: ans,
       };
 
       jwt.sign(payLoad, secret, { expiresIn: 3600 }, (err, token) => {
