@@ -1,8 +1,6 @@
-const express = require('express');
-const router = express.Router();
 const User = require('../../../models/adminModel');
+const Org = require('../../../models/org');
 const jwt = require('jsonwebtoken');
-const passport = require('passport');
 const secret = 'sabkaBaapHaIyeSoftware';
 
 const validateLogin = require('../../../validations/loginValidations');
@@ -27,8 +25,6 @@ exports.adminRegister = (req, res) => {
           password: req.body.password,
           userType: 1,
         });
-
-        console.log(newUser);
 
         newUser
           .save()
@@ -100,5 +96,58 @@ exports.adminRestrict = (req, res) => {
   res.json({
     email: req.user.email,
     name: req.user.name,
+  });
+};
+
+// orgnisation get route
+
+exports.adminOrgAccess = (req, res) => {
+  const errors = {};
+
+  Org.find().then((org) => {
+    if (org.length == 0) {
+      errors.org = 'Organisation Not found';
+      res.status(400).json(errors);
+    }
+
+    res.status(200).json(org);
+  });
+};
+
+// orgnisation post route
+
+exports.adminOrgCreate = (req, res) => {
+  const errors = {};
+
+  Org.findOne({ name: req.body.name }).then((org) => {
+    if (org) {
+      errors.org = 'Organisation Name Exists!';
+      res.status(400).json(errors);
+    } else {
+      const newOrg = new Org({
+        name: req.body.name,
+      });
+
+      console.log(newOrg);
+
+      newOrg
+        .save()
+        .then((doc, err) => {
+          if (err) {
+            res.status(400).json({
+              error: e,
+            });
+          } else {
+            res.status(200).json({
+              name: doc.name,
+            });
+          }
+        })
+        .catch((e) => {
+          res.status(400).json({
+            error: e,
+          });
+        });
+    }
   });
 };

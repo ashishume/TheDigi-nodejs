@@ -12,4 +12,16 @@ router.get(
   admin.adminRestrict
 );
 
+router.get(
+  '/org',
+  passport.authenticate('jwt', { session: false }),
+  admin.adminOrgAccess
+);
+
+router.post(
+  '/org',
+  passport.authenticate('jwt', { session: false }),
+  admin.adminOrgCreate
+);
+
 module.exports = router;
