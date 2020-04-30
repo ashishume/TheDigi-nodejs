@@ -25,7 +25,7 @@ exports.adminRegister = (req, res) => {
           name: req.body.name,
           email: req.body.email,
           password: req.body.password,
-          type: req.body.type,
+          userType: 1,
         });
 
         console.log(newUser);
