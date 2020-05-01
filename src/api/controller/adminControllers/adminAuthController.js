@@ -107,7 +107,7 @@ exports.adminOrgAccess = (req, res) => {
   Org.find().then((org) => {
     if (org.length == 0) {
       errors.org = 'Organisation Not found';
-      res.status(400).json(errors);
+      res.status(204).json(errors);
     }
 
     res.status(200).json(org);
