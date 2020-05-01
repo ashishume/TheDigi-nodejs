@@ -1,11 +1,11 @@
-const mongoose = require('mongoose');
-const axios = require('axios');
+const mongoose = require("mongoose");
+const axios = require("axios");
 
 const connectDB = () => {
   try {
     axios
       .get(
-        'https://raw.githubusercontent.com/sounak07/cReD/master/credentials.json'
+        "https://raw.githubusercontent.com/sounak07/cReD/master/credentials.json"
       )
       .then((data) => {
         data.data.map((value) => {
@@ -15,7 +15,7 @@ const connectDB = () => {
               useUnifiedTopology: true,
             })
             .then((body) => {
-              console.log('Mongo Connected...');
+              console.log("Mongo Connected...");
             });
         });
       })
