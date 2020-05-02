@@ -1,3 +1,5 @@
+/** @format */
+
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
@@ -22,6 +24,18 @@ router.post(
   '/org',
   passport.authenticate('jwt', { session: false }),
   admin.adminOrgCreate
+);
+
+router.post(
+  '/subject',
+  passport.authenticate('jwt', { session: false }),
+  admin.adminSubCreate
+);
+
+router.get(
+  '/subject',
+  passport.authenticate('jwt', { session: false }),
+  admin.adminSubAccess
 );
 
 module.exports = router;

@@ -1,7 +1,10 @@
+/** @format */
+
 const User = require('../../../models/adminModel');
 const Org = require('../../../models/org');
 const jwt = require('jsonwebtoken');
 const secret = 'sabkaBaapHaIyeSoftware';
+const Subject = require('../../../models/Subject');
 
 const validateLogin = require('../../../validations/loginValidations');
 const validateRegister = require('../../../validations/registerValidations');
@@ -128,8 +131,6 @@ exports.adminOrgCreate = (req, res) => {
         name: req.body.name,
       });
 
-      console.log(newOrg);
-
       newOrg
         .save()
         .then((doc, err) => {
@@ -149,5 +150,57 @@ exports.adminOrgCreate = (req, res) => {
           });
         });
     }
+  });
+};
+
+//subject post route
+
+exports.adminSubCreate = (req, res) => {
+  const errors = {};
+
+  Subject.findOne({ subjectName: req.body.subjectName }).then((sub) => {
+    if (sub) {
+      errors.subjectName = 'Subject Already Exists!';
+      res.status(400).json(errors);
+    } else {
+      const newSub = new Subject({
+        subjectName: req.body.subjectName,
+      });
+
+      console.log(newSub);
+      newSub
+        .save()
+        .then((doc, err) => {
+          if (err) {
+            res.status(400).json({
+              error: e,
+            });
+          } else {
+            res.status(200).json({
+              subjectName: doc.subjectName,
+            });
+          }
+        })
+        .catch((e) => {
+          res.status(400).json({
+            error: e,
+          });
+        });
+    }
+  });
+};
+
+//subject get route
+
+exports.adminSubAccess = (req, res) => {
+  const errors = {};
+
+  Subject.find().then((sub) => {
+    if (sub.length == 0) {
+      errors.subjectName = 'Subjects Not found';
+      res.status(204).json(errors);
+    }
+
+    res.status(200).json(sub);
   });
 };
