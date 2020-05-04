@@ -10,22 +10,8 @@ const StudentSchema = new Schema({
   email: { type: String, required: true },
   phone: { type: String, required: true },
   userType: { type: Number },
-  subjects: [
-    {
-      subId: {
-        type: Schema.Types.ObjectId,
-        ref: 'subject',
-      },
-    },
-  ],
-  teachers: [
-    {
-      studentId: {
-        type: Schema.Types.ObjectId,
-        ref: 'teacher',
-      },
-    },
-  ],
+  subjects: [],
+  teachers: [],
   isDeleted: { type: Boolean },
 });
 
