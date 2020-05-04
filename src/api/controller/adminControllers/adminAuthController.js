@@ -51,7 +51,10 @@ exports.adminRegister = (req, res) => {
       }
     })
     .catch((e) => {
-      console.log(e);
+      errors.error = e;
+      errors.msg = 'Something went wrong';
+
+      res.status(400).json(errors);
     });
 };
 
@@ -62,44 +65,43 @@ exports.adminLogin = (req, res) => {
     return res.status(400).json(errors);
   }
 
-  User.findOne({ email: req.body.email }).then((user) => {
-    if (!user) {
-      errors.email = 'Not found';
+  User.findOne({ email: req.body.email })
+    .then((user) => {
+      if (!user) {
+        errors.email = 'Not found';
 
-      res.status(404).json(errors);
-    }
+        res.status(404).json(errors);
+      }
 
-    const typeNum = Math.floor(100000 + Math.random() * 900000);
+      const typeNum = Math.floor(100000 + Math.random() * 900000);
 
-    let ans = typeNum.toString() + user.userType;
+      let ans = typeNum.toString() + user.userType;
 
-    if (user.password === req.body.password) {
-      const payLoad = {
-        id: user._id,
-        email: user.email,
-        name: user.name,
-        type: ans,
-      };
+      if (user.password === req.body.password) {
+        const payLoad = {
+          id: user._id,
+          email: user.email,
+          name: user.name,
+          type: ans,
+        };
 
-      jwt.sign(payLoad, secret, { expiresIn: 3600 }, (err, token) => {
-        if (err) throw err;
-        res.json({
-          success: true,
-          token: `Bearer ${token}`,
+        jwt.sign(payLoad, secret, { expiresIn: 3600 }, (err, token) => {
+          if (err) throw err;
+          res.json({
+            success: true,
+            token: `Bearer ${token}`,
+          });
         });
-      });
-    } else {
-      errors.password = 'Incorrect password';
-      return res.status(404).json(errors);
-    }
-  });
-};
-
-exports.adminRestrict = (req, res) => {
-  res.json({
-    email: req.user.email,
-    name: req.user.name,
-  });
+      } else {
+        errors.password = 'Incorrect password';
+        return res.status(404).json(errors);
+      }
+    })
+    .catch((e) => {
+      errors.error = e;
+      errors.error = 'Something went wrong';
+      res.status(400).json(errors);
+    });
 };
 
 // orgnisation get route
@@ -145,9 +147,9 @@ exports.adminOrgCreate = (req, res) => {
           }
         })
         .catch((e) => {
-          res.status(400).json({
-            error: e,
-          });
+          errors.error = e;
+          errors.error = 'Something went wrong';
+          res.status(400).json(errors);
         });
     }
   });
@@ -158,36 +160,42 @@ exports.adminOrgCreate = (req, res) => {
 exports.adminSubCreate = (req, res) => {
   const errors = {};
 
-  Subject.findOne({ subjectName: req.body.subjectName }).then((sub) => {
-    if (sub) {
-      errors.subjectName = 'Subject Already Exists!';
-      res.status(400).json(errors);
-    } else {
-      const newSub = new Subject({
-        subjectName: req.body.subjectName,
-      });
+  Subject.findOne({ subjectName: req.body.subjectName })
+    .then((sub) => {
+      if (sub) {
+        errors.subjectName = 'Subject Already Exists!';
+        res.status(400).json(errors);
+      } else {
+        const newSub = new Subject({
+          subjectName: req.body.subjectName,
+        });
 
-      console.log(newSub);
-      newSub
-        .save()
-        .then((doc, err) => {
-          if (err) {
+        console.log(newSub);
+        newSub
+          .save()
+          .then((doc, err) => {
+            if (err) {
+              res.status(400).json({
+                error: e,
+              });
+            } else {
+              res.status(200).json({
+                subjectName: doc.subjectName,
+              });
+            }
+          })
+          .catch((e) => {
             res.status(400).json({
               error: e,
             });
-          } else {
-            res.status(200).json({
-              subjectName: doc.subjectName,
-            });
-          }
-        })
-        .catch((e) => {
-          res.status(400).json({
-            error: e,
           });
-        });
-    }
-  });
+      }
+    })
+    .catch((e) => {
+      errors.error = e;
+      errors.error = 'Something went wrong';
+      res.status(400).json(errors);
+    });
 };
 
 //subject get route
@@ -195,12 +203,18 @@ exports.adminSubCreate = (req, res) => {
 exports.adminSubAccess = (req, res) => {
   const errors = {};
 
-  Subject.find({}, { __v: 0 }).then((sub) => {
-    if (sub.length == 0) {
-      errors.subjectName = 'Subjects Not found';
-      res.status(204).json(errors);
-    }
+  Subject.find({}, { __v: 0 })
+    .then((sub) => {
+      if (sub.length == 0) {
+        errors.subjectName = 'Subjects Not found';
+        res.status(204).json(errors);
+      }
 
-    res.status(200).json(sub);
-  });
+      res.status(200).json(sub);
+    })
+    .catch((e) => {
+      errors.error = e;
+      errors.error = 'Something went wrong';
+      res.status(400).json(errors);
+    });
 };

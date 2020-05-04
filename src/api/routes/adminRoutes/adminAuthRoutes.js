@@ -8,11 +8,6 @@ const admin = require('../../controller/adminControllers/adminAuthController');
 
 router.post('/adminRegister', admin.adminRegister);
 router.post('/adminLogin', admin.adminLogin);
-router.get(
-  '/adminRestrict',
-  passport.authenticate('jwt', { session: false }),
-  admin.adminRestrict
-);
 
 router.get(
   '/org',
