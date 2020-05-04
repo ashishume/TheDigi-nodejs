@@ -1,16 +1,14 @@
-/** @format */
+const User = require("../../../models/adminModel");
+const Org = require("../../../models/org");
+const jwt = require("jsonwebtoken");
+const secret = "sabkaBaapHaIyeSoftware";
+const Subject = require("../../../models/Subject");
 
-const User = require('../../../models/adminModel');
-const Org = require('../../../models/org');
-const jwt = require('jsonwebtoken');
-const secret = 'sabkaBaapHaIyeSoftware';
-const Subject = require('../../../models/Subject');
-
-const validateLogin = require('../../../validations/loginValidations');
-const validateRegister = require('../../../validations/registerValidations');
+const validateLogin = require("../../../validations/loginValidations");
+const validateRegister = require("../../../validations/registerValidations");
 
 exports.adminRegister = (req, res) => {
-  const { errors, isValid } = validateRegister(req.body, 'signup');
+  const { errors, isValid } = validateRegister(req.body, "signup");
 
   if (!isValid) {
     return res.status(400).json(errors);
@@ -19,7 +17,7 @@ exports.adminRegister = (req, res) => {
   User.findOne({ email: req.body.email })
     .then((user) => {
       if (user) {
-        errors.email = 'Email exists';
+        errors.email = "Email exists";
         res.status(400).json(errors);
       } else {
         const newUser = new User({
@@ -56,7 +54,7 @@ exports.adminRegister = (req, res) => {
 };
 
 exports.adminLogin = (req, res) => {
-  const { errors, isValid } = validateLogin(req.body, 'login');
+  const { errors, isValid } = validateLogin(req.body, "login");
 
   if (!isValid) {
     return res.status(400).json(errors);
@@ -64,7 +62,7 @@ exports.adminLogin = (req, res) => {
 
   User.findOne({ email: req.body.email }).then((user) => {
     if (!user) {
-      errors.email = 'Not found';
+      errors.email = "Not found";
 
       res.status(404).json(errors);
     }
@@ -89,7 +87,7 @@ exports.adminLogin = (req, res) => {
         });
       });
     } else {
-      errors.password = 'Incorrect password';
+      errors.password = "Incorrect password";
       return res.status(404).json(errors);
     }
   });
@@ -109,7 +107,7 @@ exports.adminOrgAccess = (req, res) => {
 
   Org.find().then((org) => {
     if (org.length == 0) {
-      errors.org = 'Organisation Not found';
+      errors.org = "Organisation Not found";
       res.status(204).json(errors);
     }
 
@@ -124,7 +122,7 @@ exports.adminOrgCreate = (req, res) => {
 
   Org.findOne({ name: req.body.name }).then((org) => {
     if (org) {
-      errors.org = 'Organisation Name Exists!';
+      errors.org = "Organisation Name Exists!";
       res.status(400).json(errors);
     } else {
       const newOrg = new Org({
@@ -160,7 +158,7 @@ exports.adminSubCreate = (req, res) => {
 
   Subject.findOne({ subjectName: req.body.subjectName }).then((sub) => {
     if (sub) {
-      errors.subjectName = 'Subject Already Exists!';
+      errors.subjectName = "Subject Already Exists!";
       res.status(400).json(errors);
     } else {
       const newSub = new Subject({
@@ -197,7 +195,7 @@ exports.adminSubAccess = (req, res) => {
 
   Subject.find({}, { __v: 0 }).then((sub) => {
     if (sub.length == 0) {
-      errors.subjectName = 'Subjects Not found';
+      errors.subjectName = "Subjects Not found";
       res.status(204).json(errors);
     }
 
