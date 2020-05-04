@@ -1,40 +1,38 @@
-/** @format */
-
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const passport = require('passport');
+const passport = require("passport");
 
-const admin = require('../../controller/adminControllers/adminAuthController');
+const admin = require("../../controller/adminControllers/adminAuthController");
 
-router.post('/adminRegister', admin.adminRegister);
-router.post('/adminLogin', admin.adminLogin);
+router.post("/adminRegister", admin.adminRegister);
+router.post("/adminLogin", admin.adminLogin);
 router.get(
-  '/adminRestrict',
-  passport.authenticate('jwt', { session: false }),
+  "/adminRestrict",
+  passport.authenticate("jwt", { session: false }),
   admin.adminRestrict
 );
 
 router.get(
-  '/org',
-  passport.authenticate('jwt', { session: false }),
+  "/org",
+  passport.authenticate("jwt", { session: false }),
   admin.adminOrgAccess
 );
 
 router.post(
-  '/org',
-  passport.authenticate('jwt', { session: false }),
+  "/org",
+  passport.authenticate("jwt", { session: false }),
   admin.adminOrgCreate
 );
 
 router.post(
-  '/subject',
-  passport.authenticate('jwt', { session: false }),
+  "/subject",
+  passport.authenticate("jwt", { session: false }),
   admin.adminSubCreate
 );
 
 router.get(
-  '/subject',
-  passport.authenticate('jwt', { session: false }),
+  "/subject",
+  passport.authenticate("jwt", { session: false }),
   admin.adminSubAccess
 );
 
