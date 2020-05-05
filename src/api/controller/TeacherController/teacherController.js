@@ -4,7 +4,8 @@ const jwt = require('jsonwebtoken');
 const secret = 'sabkaBaapHaIyeSoftware';
 
 const Teacher = require('../../../models/Teacher');
-const StudentMOdel = require('../../../models/Student');
+const StudentModel = require('../../../models/Student');
+const SubjectModel = require('../../../models/Subject');
 
 exports.teacherRegister = (req, res) => {
   const errors = {};
@@ -95,48 +96,103 @@ exports.teacherLogin = (req, res) => {
     });
 };
 
-exports.addStudents = (req, res) => {
+// exports.addStudents = (req, res) => {
+//   const errors = {};
+
+//   Teacher.findById(req.body.teacherID)
+//     .then((teacher) => {
+//       if (teacher) {
+//         const studentData = req.body.students;
+//         if (studentData.length > 0) {
+//           // studentData.map((s) => {
+//           //   if (s) {
+//           //     teacher.students.push(s);
+//           //   } else {
+//           //     errors.msg = `Student id = ${stuId} not found`;
+//           //     res.status(400).json(errors);
+//           //   }
+//           // });
+
+//           // teacher.save().then((teacher) => {
+//           //   res.status(200).json(teacher);
+//           // });
+//           studentData.map((stuId) => {
+//             StudentModel.findById(stuId)
+//               .then((stu) => {
+//                 if (stu) {
+//                   teacher.students.push(stu._id);
+//                 } else {
+//                   errors.msg = `Student id = ${stuId} not found`;
+//                   res.status(400).json(errors);
+//                 }
+//               })
+//               .catch((e) => {
+//                 errors.msg = 'No student found';
+//                 errors.error = e;
+//                 res.status(404).json(errors);
+//               });
+//           });
+
+//           teacher.save().then((teacher) => {
+//             res.status(200).json(teacher);
+//           });
+//         } else {
+//           errors.msg = 'Students array empty';
+//           res.status(400).json(errors);
+//         }
+//       } else {
+//         errors.msg = "Teacher doesn't exist";
+//         res.status(404).json(errors);
+//       }
+//     })
+//     .catch((e) => {
+//       errors.msg = 'No teacher found';
+//       errors.error = e;
+//       res.status(404).json(errors);
+//     });
+// };
+
+exports.addSubjects = (req, res) => {
   const errors = {};
 
-  Teacher.findOne({ _id: req.body.teacherID })
+  Teacher.findById(req.body.teacherID)
     .then((teacher) => {
       if (teacher) {
-        const studentData = req.body.students;
-        if (studentData.length > 0) {
-          //   studentData.map((s) => {
-          //     if (s) {
-          //       teacher.students.push(s);
-          //     } else {
-          //       errors.msg = `Student id = ${stuId} not found`;
-          //       res.status(400).json(errors);
-          //     }
-          //   });
+        const subjectData = req.body.subjects;
+        if (subjectData.length > 0) {
+          let incomingSubs = [];
 
-          //   teacher.save().then((teacher) => {
-          //     res.status(200).json(teacher);
-          //   });
-          studentData.map((stuId) => {
-            StudentMOdel.findOne({ _id: stuId })
-              .then((stu) => {
-                if (stu) {
-                  teacher.students.push(stu._id);
+          subjectData.map((subID) => {
+            // if (teacher.subjects.filter((sub) => sub === subID).length > 0) {
+            //   errors.isSubject = 'Subject already exist';
+            //   return res.status(400).json(errors);
+            // }
+
+            SubjectModel.findById(subID)
+              .then((sub) => {
+                if (sub) {
+                  console.log('==>', subID);
+
+                  incomingSubs.push(subID);
                 } else {
-                  errors.msg = `Student id = ${stuId} not found`;
+                  errors.msg = `Subject id = ${stuId} not found`;
                   res.status(400).json(errors);
                 }
               })
               .catch((e) => {
-                errors.msg = 'No student found';
+                errors.msg = 'Something went wrong';
                 errors.error = e;
                 res.status(404).json(errors);
               });
           });
 
+          // teacher.subjects.push(incomingSubs);
+
           teacher.save().then((teacher) => {
             res.status(200).json(teacher);
           });
         } else {
-          errors.msg = 'Students array empty';
+          errors.msg = 'Subjects array empty';
           res.status(400).json(errors);
         }
       } else {

@@ -14,10 +14,16 @@ router.post(
 
 router.post('/teacherLogin', teacher.teacherLogin);
 
+// router.post(
+//   '/addStudents',
+//   passport.authenticate('jwt', { session: false }),
+//   teacher.addStudents
+// );
+
 router.post(
-  '/addStudents',
+  '/addSubjects',
   passport.authenticate('jwt', { session: false }),
-  teacher.addStudents
+  teacher.addSubjects
 );
 
 router.get(
