@@ -15,6 +15,7 @@ app.use(bodyParser.json());
 const index = require('./api/routes/index');
 const adminRoutes = require('./api/routes/adminRoutes/adminAuthRoutes');
 const teacherRoutes = require('./api/routes/teacherRoutes/teacherRoutes');
+const studentRoutes = require('./api/routes/studentRoutes/studentRoutes');
 
 const logRequestStart = (req, res, next) => {
   console.info(`${req.method} ${req.originalUrl}`);
@@ -48,6 +49,7 @@ require('./config/passport')(passport);
 app.use('/', index);
 app.use('/api/admin', adminRoutes);
 app.use('/api/teacher', teacherRoutes);
+app.use('/api/student', studentRoutes);
 
 // app.use('/api/user', user);
 

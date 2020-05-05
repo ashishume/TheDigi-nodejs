@@ -7,13 +7,17 @@ const Teacher = require('../../../models/Teacher');
 const StudentModel = require('../../../models/Student');
 const SubjectModel = require('../../../models/Subject');
 
+// {
+//     username,name,email,password, phone
+// }
+
 exports.teacherRegister = (req, res) => {
   const errors = {};
 
-  Teacher.findOne({ username: req.body.username })
+  Teacher.findOne({ email: req.body.email })
     .then((user) => {
       if (user) {
-        errors.msg = 'Username exists, choose another!';
+        errors.msg = 'User exists!';
         res.status(400).json(errors);
       } else {
         const newTeacher = new Teacher({
@@ -23,6 +27,7 @@ exports.teacherRegister = (req, res) => {
           password: req.body.password,
           userType: 2,
           phone: req.body.phone,
+          isDeleted: false,
         });
 
         newTeacher
@@ -52,10 +57,13 @@ exports.teacherRegister = (req, res) => {
     });
 };
 
+// {
+//     email,password
+// }
 exports.teacherLogin = (req, res) => {
   const errors = {};
 
-  Teacher.findOne({ username: req.body.username })
+  Teacher.findOne({ email: req.body.email })
     .then((user) => {
       if (!user) {
         errors.msg = 'Not found';
@@ -95,6 +103,10 @@ exports.teacherLogin = (req, res) => {
       res.status(404).json(errors);
     });
 };
+
+// {
+//     teacherID, students:[]
+// }
 
 // exports.addStudents = (req, res) => {
 //   const errors = {};
@@ -151,6 +163,10 @@ exports.teacherLogin = (req, res) => {
 //       res.status(404).json(errors);
 //     });
 // };
+
+// {
+//     teacherID, subjects:[]
+// }
 
 exports.addSubjects = (req, res) => {
   const errors = {};
