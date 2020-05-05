@@ -155,46 +155,39 @@ exports.teacherLogin = (req, res) => {
 exports.addSubjects = (req, res) => {
   const errors = {};
 
+  let incomingSubs = [];
+
+  const subjectData = req.body.subjects;
+  if (subjectData.length > 0) {
+    subjectData.map((subID) => {
+      SubjectModel.findById(subID)
+        .then((sub) => {
+          if (sub) {
+            incomingSubs.unshift(subID);
+          } else {
+            errors.msg = `Subject id = ${stuId} not found`;
+            res.status(400).json(errors);
+          }
+        })
+        .catch((e) => {
+          errors.msg = 'Something went wrong';
+          errors.error = e;
+          res.status(404).json(errors);
+        });
+    });
+  } else {
+    errors.msg = 'Subjects array empty';
+    res.status(400).json(errors);
+  }
+
   Teacher.findById(req.body.teacherID)
     .then((teacher) => {
       if (teacher) {
-        const subjectData = req.body.subjects;
-        if (subjectData.length > 0) {
-          let incomingSubs = [];
-
-          subjectData.map((subID) => {
-            // if (teacher.subjects.filter((sub) => sub === subID).length > 0) {
-            //   errors.isSubject = 'Subject already exist';
-            //   return res.status(400).json(errors);
-            // }
-
-            SubjectModel.findById(subID)
-              .then((sub) => {
-                if (sub) {
-                  console.log('==>', subID);
-
-                  incomingSubs.push(subID);
-                } else {
-                  errors.msg = `Subject id = ${stuId} not found`;
-                  res.status(400).json(errors);
-                }
-              })
-              .catch((e) => {
-                errors.msg = 'Something went wrong';
-                errors.error = e;
-                res.status(404).json(errors);
-              });
-          });
-
-          // teacher.subjects.push(incomingSubs);
-
-          teacher.save().then((teacher) => {
-            res.status(200).json(teacher);
-          });
-        } else {
-          errors.msg = 'Subjects array empty';
-          res.status(400).json(errors);
-        }
+        Teacher.findByIdAndUpdate(
+          teacher._id,
+          { $addToSet: { subjects: incomingSubs } },
+          { new: true, useFindAndModify: false }
+        ).then((teacher) => res.json(teacher));
       } else {
         errors.msg = "Teacher doesn't exist";
         res.status(404).json(errors);
