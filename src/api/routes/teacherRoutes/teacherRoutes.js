@@ -29,11 +29,7 @@ router.post(
   teacher.addSubjects
 );
 
-router.get(
-  "/teacherDetails",
-  passport.authenticate("jwt", { session: false }),
-  teacher.allTeachers
-);
+router.get("/teacherDetails", teacher.allTeachers);
 router.post(
   "/teacherCSVUpload",
   upload.single("csvData"),
