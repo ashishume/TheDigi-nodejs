@@ -1,11 +1,31 @@
 /** @format */
 
-const jwt = require('jsonwebtoken');
-const secret = 'sabkaBaapHaIyeSoftware';
+const jwt = require("jsonwebtoken");
+const secret = "sabkaBaapHaIyeSoftware";
 
-const Teacher = require('../../../models/Teacher');
-const StudentModel = require('../../../models/Student');
-const SubjectModel = require('../../../models/Subject');
+const Teacher = require("../../../models/Teacher");
+const StudentModel = require("../../../models/Student");
+const SubjectModel = require("../../../models/Subject");
+const csv = require("csv-parser");
+const fs = require("fs");
+
+exports.teacherCSVUpload = (req, res) => {
+  let tempArray = [];
+  fs.createReadStream(req.file.path)
+    .pipe(csv())
+    .on("data", (row) => {
+      tempArray.push(row);
+    })
+    .on("end", () => {
+      Teacher.insertMany(tempArray, (err, data) => {
+        if (data) {
+          res.status(200).json({
+            msg: "Csv upload completed",
+          });
+        }
+      });
+    });
+};
 
 // {
 //     username,name,email,password, phone
@@ -17,7 +37,7 @@ exports.teacherRegister = (req, res) => {
   Teacher.findOne({ email: req.body.email })
     .then((user) => {
       if (user) {
-        errors.msg = 'User exists!';
+        errors.msg = "User exists!";
         res.status(400).json(errors);
       } else {
         const newTeacher = new Teacher({
@@ -66,7 +86,7 @@ exports.teacherLogin = (req, res) => {
   Teacher.findOne({ email: req.body.email })
     .then((user) => {
       if (!user) {
-        errors.msg = 'Not found';
+        errors.msg = "Not found";
 
         res.status(404).json(errors);
       }
@@ -93,12 +113,12 @@ exports.teacherLogin = (req, res) => {
           });
         });
       } else {
-        errors.msg = 'Incorrect password';
+        errors.msg = "Incorrect password";
         return res.status(404).json(errors);
       }
     })
     .catch((e) => {
-      errors.msg = 'No User found';
+      errors.msg = "No User found";
       errors.error = e;
       res.status(404).json(errors);
     });
@@ -186,13 +206,13 @@ exports.addSubjects = (req, res) => {
           }
         })
         .catch((e) => {
-          errors.msg = 'Something went wrong';
+          errors.msg = "Something went wrong";
           errors.error = e;
           res.status(404).json(errors);
         });
     });
   } else {
-    errors.msg = 'Subjects array empty';
+    errors.msg = "Subjects array empty";
     res.status(400).json(errors);
   }
 
@@ -210,7 +230,7 @@ exports.addSubjects = (req, res) => {
       }
     })
     .catch((e) => {
-      errors.msg = 'No teacher found';
+      errors.msg = "No teacher found";
       errors.error = e;
       res.status(404).json(errors);
     });
@@ -220,14 +240,14 @@ exports.allTeachers = (req, res) => {
   Teacher.find({}, { __v: 0 })
     .then((teach) => {
       if (teach.length == 0) {
-        errors.msg = 'Teachers Not found';
+        errors.msg = "Teachers Not found";
         res.status(204).json(errors);
       }
 
       res.status(200).json(teach);
     })
     .catch((e) => {
-      errors.msg = 'No teacher found';
+      errors.msg = "No teacher found";
       errors.error = e;
       res.status(404).json(errors);
     });

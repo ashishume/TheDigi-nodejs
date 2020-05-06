@@ -1,18 +1,21 @@
 /** @format */
 
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const passport = require('passport');
+const passport = require("passport");
 
-const teacher = require('../../controller/TeacherController/teacherController');
+const teacher = require("../../controller/TeacherController/teacherController");
+
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 router.post(
-  '/teacherRegister',
-  passport.authenticate('jwt', { session: false }),
+  "/teacherRegister",
+  passport.authenticate("jwt", { session: false }),
   teacher.teacherRegister
 );
 
-router.post('/teacherLogin', teacher.teacherLogin);
+router.post("/teacherLogin", teacher.teacherLogin);
 
 // router.post(
 //   '/addStudents',
@@ -21,15 +24,21 @@ router.post('/teacherLogin', teacher.teacherLogin);
 // );
 
 router.post(
-  '/addSubjects',
-  passport.authenticate('jwt', { session: false }),
+  "/addSubjects",
+  passport.authenticate("jwt", { session: false }),
   teacher.addSubjects
 );
 
 router.get(
-  '/teacherDetails',
-  passport.authenticate('jwt', { session: false }),
+  "/teacherDetails",
+  passport.authenticate("jwt", { session: false }),
   teacher.allTeachers
+);
+router.post(
+  "/teacherCSVUpload",
+  upload.single("csvData"),
+  passport.authenticate("jwt", { session: false }),
+  teacher.teacherCSVUpload
 );
 
 module.exports = router;
