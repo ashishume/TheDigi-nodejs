@@ -2,7 +2,7 @@
 
 const User = require('../../../models/adminModel');
 const jwt = require('jsonwebtoken');
-const secret = 'sabkaBaapHaIyeSoftware';
+const { secret } = require('../../../config/secrets');
 
 const validateLogin = require('../../../validations/loginValidations');
 const validateRegister = require('../../../validations/registerValidations');

@@ -1,9 +1,11 @@
+/** @format */
+
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const mongoose = require('mongoose');
 
 const User = mongoose.model('admin');
-const secret = 'sabkaBaapHaIyeSoftware';
+const { secret } = require('../config/secrets');
 
 const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
