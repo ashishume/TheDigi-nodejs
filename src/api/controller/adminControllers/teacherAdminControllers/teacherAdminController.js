@@ -187,7 +187,7 @@ exports.addSubjects = (req, res) => {
 };
 
 exports.allTeachers = (req, res) => {
-  Teacher.find({}, { __v: 0 })
+  Teacher.find({ isDeleted: false }, { __v: 0 })
     .then((teach) => {
       if (teach.length == 0) {
         errors.msg = 'Teachers Not found';

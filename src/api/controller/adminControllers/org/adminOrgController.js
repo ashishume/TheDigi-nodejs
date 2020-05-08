@@ -7,7 +7,7 @@ const Org = require('../../../../models/org');
 exports.adminOrgAccess = (req, res) => {
   const errors = {};
 
-  Org.find().then((org) => {
+  Org.find({ isDeleted: false }, { __v: 0 }).then((org) => {
     if (org.length == 0) {
       errors.org = 'Organisation Not found';
       res.status(204).json(errors);

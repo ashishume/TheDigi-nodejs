@@ -53,7 +53,7 @@ exports.adminSubCreate = (req, res) => {
 exports.adminSubAccess = (req, res) => {
   const errors = {};
 
-  Subject.find({}, { __v: 0 })
+  Subject.find({ isDeleted: false }, { __v: 0 })
     .then((sub) => {
       if (sub.length == 0) {
         errors.subjectName = 'Subjects Not found';

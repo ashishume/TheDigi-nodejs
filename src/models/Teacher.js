@@ -13,7 +13,7 @@ const TeacherSchema = new Schema({
   subjects: [],
   students: [],
   org: [],
-  isDeleted: { type: Boolean },
+  isDeleted: { type: Boolean, default: false },
 });
 
 module.exports = Teacher = mongoose.model('teacher', TeacherSchema);

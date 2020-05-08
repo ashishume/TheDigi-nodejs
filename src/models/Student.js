@@ -12,7 +12,7 @@ const StudentSchema = new Schema({
   userType: { type: Number },
   subjects: [],
   teachers: [],
-  isDeleted: { type: Boolean },
+  isDeleted: { type: Boolean, default: false },
 });
 
 module.exports = Student = mongoose.model('student', StudentSchema);
