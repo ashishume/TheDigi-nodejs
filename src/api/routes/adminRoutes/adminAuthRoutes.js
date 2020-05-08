@@ -45,11 +45,11 @@ router.post(
   adminTeacher.teacherRegister
 );
 
-// router.post(
-//   '/addStudents',
-//   passport.authenticate('jwt', { session: false }),
-//   teacher.addStudents
-// );
+router.post(
+  '/addStudents',
+  passport.authenticate('jwt', { session: false }),
+  adminTeacher.addStudents
+);
 
 router.post(
   '/addSubjects',
@@ -58,6 +58,8 @@ router.post(
 );
 
 router.get('/teacherDetails', adminTeacher.allTeachers);
+
+router.get('/studentDetails', adminTeacher.allStudents);
 
 //csv upload route
 router.post(
