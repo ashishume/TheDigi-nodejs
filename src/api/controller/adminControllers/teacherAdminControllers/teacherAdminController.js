@@ -208,8 +208,27 @@ exports.allStudents = (req, res) => {
       res.status(200).json(stu);
     })
     .catch((e) => {
-      errors.msg = 'No Student found';
+      errors.msg = 'Something went wrong';
       errors.error = e;
       res.status(404).json(errors);
+    });
+};
+
+exports.teacherById = (req, res) => {
+  Teacher.findById(req.body.teacherID)
+    .then((teach) => {
+      if (!teach) {
+        res.status(404).json({
+          msg: 'No teacher found',
+        });
+      } else {
+        res.status(200).json(teach);
+      }
+    })
+    .catch((e) => {
+      res.status(404).json({
+        error: e,
+        msg: 'Something went wrong',
+      });
     });
 };

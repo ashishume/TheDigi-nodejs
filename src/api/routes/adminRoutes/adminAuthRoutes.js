@@ -57,9 +57,17 @@ router.post(
   adminTeacher.addSubjects
 );
 
-router.get('/teacherDetails', adminTeacher.allTeachers);
+router.get(
+  '/teacherDetails',
+  passport.authenticate('jwt', { session: false }),
+  adminTeacher.allTeachers
+);
 
-router.get('/studentDetails', adminTeacher.allStudents);
+router.get(
+  '/studentDetails',
+  passport.authenticate('jwt', { session: false }),
+  adminTeacher.allStudents
+);
 
 //csv upload route
 router.post(
@@ -67,6 +75,12 @@ router.post(
   upload.single('csvData'),
   passport.authenticate('jwt', { session: false }),
   adminTeacher.teacherCSVUpload
+);
+
+router.get(
+  '/teacher',
+  passport.authenticate('jwt', { session: false }),
+  adminTeacher.teacherById
 );
 
 module.exports = router;
