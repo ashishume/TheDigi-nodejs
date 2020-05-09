@@ -11,6 +11,7 @@ const admin = require('../../controller/adminControllers/adminAuthController');
 const adminOrg = require('../../controller/adminControllers/org/adminOrgController');
 const adminSub = require('../../controller/adminControllers/subject/adminSubController');
 const adminTeacher = require('../../controller/adminControllers/teacherAdminControllers/teacherAdminController');
+const adminStudent = require('../../controller/adminControllers/studentAdminControllers/studentAdminControllers');
 
 router.post('/adminRegister', admin.adminRegister);
 router.post('/adminLogin', admin.adminLogin);
@@ -81,6 +82,25 @@ router.get(
   '/teacher',
   passport.authenticate('jwt', { session: false }),
   adminTeacher.teacherById
+);
+
+router.post(
+  '/studentRegister',
+  passport.authenticate('jwt', { session: false }),
+  adminStudent.studentRegister
+);
+
+router.post(
+  '/studentCSVUpload',
+  upload.single('csvData'),
+  passport.authenticate('jwt', { session: false }),
+  adminStudent.studentCSVUpload
+);
+
+router.get(
+  '/student',
+  passport.authenticate('jwt', { session: false }),
+  adminStudent.studentById
 );
 
 module.exports = router;
